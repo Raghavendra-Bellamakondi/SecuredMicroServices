@@ -18,9 +18,19 @@ namespace IdentityServer
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddIdentityServer().AddInMemoryClients(new List<Client>() { }).AddInMemoryApiResources(new List<ApiResource>()).
-                AddInMemoryIdentityResources(new List<IdentityResource>()).AddInMemoryApiScopes(new List<ApiScope>()).
-                AddTestUsers(new List<TestUser>()).AddDeveloperSigningCredential();
+            services.AddIdentityServer().AddInMemoryClients(new List<Client>() {
+                new Client()
+                {
+                    ClientId="MovieClient",
+                    AllowedGrantTypes=GrantTypes.ClientCredentials,
+                    ClientSecrets={ new Secret( "secret".Sha256()) },
+                    AllowedScopes={"moviesApi"}
+                }
+            })
+               .AddInMemoryApiScopes(new List<ApiScope>() { 
+                new ApiScope("moviesApi","Movies Api")
+                }).
+                AddDeveloperSigningCredential();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
